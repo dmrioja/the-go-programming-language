@@ -10,34 +10,37 @@ import (
 // Modify dup2 to print the names of all files in which
 // each duplicated line occurs.
 func main() {
-	count := make(map[string]int)
+	counter := make(map[string][]string)
 	files := os.Args[1:]
 
-	if len(files) == 0 {
-		countAndPrintFileName(os.Stdin, count)
-	} else {
-		for _, arg := range files {
-			f, err := os.Open(arg)
-			if err != nil {
-				fmt.Printf("dup2 -> error reading file %s: %v\n", arg, err)
-				continue
-			}
-			countAndPrintFileName(f, count)
-			f.Close()
+	// I will only consider reading files an not Stdin
+	for _, arg := range files {
+		f, err := os.Open(arg)
+		if err != nil {
+			fmt.Printf("dup2 -> error reading file %s: %v\n", arg, err)
+			continue
 		}
+		count := countDupLines(f)
+		f.Close()
+
+		for line, n := range count {
+			if n > 1 {
+				counter[line] = append(counter[line], arg)
+			}
+		}
+	}
+
+	for line, files := range counter {
+		fmt.Printf("line \"%s\" appears duplicated in files %v\n", line, files)
 	}
 }
 
-func countAndPrintFileName(f *os.File, count map[string]int) {
+func countDupLines(f *os.File) map[string]int {
+	count := make(map[string]int)
 	input := bufio.NewScanner(f)
 	for input.Scan() {
 		count[input.Text()]++
 	}
 
-	for _, n := range count {
-		if n > 1 {
-			fmt.Printf("file %s contains duplicated lines\n", f.Name())
-			break
-		}
-	}
+	return count
 }
