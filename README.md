@@ -15,3 +15,12 @@ The preface contains some interesting links to Go documentation, resources and t
 - [The Go Blog](https://go.dev/blog/)
 - [The Go Playground](https://go.dev/play/)
 - [A tour of Go](https://go.dev/tour/list)
+
+### Chapter 1: Tutorial
+
+#### Section 1.8. Loose Ends
+
+Here we can also find some interesting links:
+
+- [Index of the standard library packages](https://golang.org/pkg)
+- [Documentation for packages contributed by the community](https://godoc.org)
